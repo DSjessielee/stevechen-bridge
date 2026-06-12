@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge Illustrated – Steve Chen</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green:  #1a3a2a;
+    --felt:   #1f4d35;
+    --felt-mid: #2a6445;
+    --gold:   #c9a84c;
+    --gold-lt:#e8c97a;
+    --cream:  #f7f2e8;
+    --ink:    #1a1a1a;
+    --muted:  #5a5a4a;
+    --rule:   rgba(201,168,76,0.35);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--green);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .felt-texture {
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 8px),
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 8px);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 2.5rem;
+  }
+
+  .suit-strip {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #c0392b 25%, #1a1a1a 25% 50%, #c0392b 50% 75%, #1a1a1a 75%);
+  }
+
+  .header-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  .header-sub {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .header-sub a {
+    color: var(--gold-lt);
+    text-decoration: none;
+  }
+
+  .card-motif {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    opacity: 0.18;
+    font-size: 2.8rem;
+    line-height: 1;
+    color: #fff;
+    user-select: none;
+  }
+
+  .card-motif span:nth-child(1),
+  .card-motif span:nth-child(4) { color: #e74c3c; }
+
+  /* ── NAV TABS ── */
+  nav {
+    background: var(--felt);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-inner::-webkit-scrollbar { display: none; }
+
+  nav a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    padding: 0.9rem 1.25rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  nav a:hover {
+    color: var(--gold-lt);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 2rem 5rem;
+  }
+
+  /* ── SECTION BLOCKS ── */
+  .part {
+    margin-top: 4rem;
+  }
+
+  .part-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .part-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .part-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── MODULE CARDS ── */
+  .modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    border: 1px solid rgba(26,58,42,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .module {
+    background: #fff;
+    padding: 1.5rem;
+    position: relative;
+    transition: background 0.15s;
+  }
+
+  .module:hover { background: #faf8f3; }
+
+  .module::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .module:hover::before { opacity: 1; }
+
+  .module-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .module h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+  }
+
+  .module p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--felt-mid);
+    background: rgba(31,77,53,0.08);
+    border: 1px solid rgba(31,77,53,0.15);
+    border-radius: 2px;
+    padding: 0.15rem 0.45rem;
+  }
+
+  /* ── FULL-WIDTH MODULES ── */
+  .module.wide {
+    grid-column: 1 / -1;
+  }
+
+  /* ── SUIT DIVIDER ── */
+  .suit-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 3rem 0 0;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  .suit-divider::before, .suit-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .suit-divider .s, .suit-divider .c { color: var(--ink); }
+  .suit-divider .h, .suit-divider .d { color: #c0392b; }
+
+  /* ── CONTACT FOOTER ── */
+  footer {
+    background: var(--green);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  footer a {
+    color: var(--gold-lt);
+    text-decoration: none;
+  }
+
+  @media (max-width: 600px) {
+    .header-inner { grid-template-columns: 1fr; }
+    .card-motif { display: none; }
+    .modules { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="suit-strip"></div>
+  <div class="felt-texture"></div>
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">A Course in Contract Bridge</div>
+      <h1>Bridge <em>Illustrated</em></h1>
+      <p class="header-sub">
+        Instructor: Steve Chen &nbsp;·&nbsp;
+        <a href="mailto:stevechen.bridge@gmail.com">stevechen.bridge@gmail.com</a>
+      </p>
+    </div>
+    <div class="card-motif" aria-hidden="true">
+      <span>♥</span><span>♠</span>
+      <span>♦</span><span>♣</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#bidding">Bidding</a>
+    <a href="#cardplay">Card Play</a>
+    <a href="#defense">Defense</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- BIDDING SYSTEM -->
+  <section class="part" id="bidding">
+    <div class="part-label">Part I</div>
+    <h2 class="part-title">Two Over One Bidding System</h2>
+
+    <div class="modules">
+
+      <div class="module">
+        <div class="module-num">01</div>
+        <h3>Opening Bids</h3>
+        <p>A tour of every opening bid in the bidding box, from 1♣ up to 5♠. Learn what unusual openings like 5♥ and 5♠ show, and how vulnerability and seat position shape your decisions.</p>
+        <div class="tags">
+          <span class="tag">preempts</span>
+          <span class="tag">vulnerability</span>
+          <span class="tag">seat position</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">02</div>
+        <h3>Responding</h3>
+        <p>The cornerstone of 2/1: establishing game-forcing auctions when responder bids a new suit at the 2-level. Covers forcing 1NT, Stayman, transfers, support bids, and responses to preempts.</p>
+        <div class="tags">
+          <span class="tag">2/1 game force</span>
+          <span class="tag">Stayman</span>
+          <span class="tag">transfers</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">03</div>
+        <h3>Opener's Rebid</h3>
+        <p>After the first round of exchange, the opener refines their hand description into minimum, medium, or maximum. Includes a clear-eyed look at reverse bids — often misused, now demystified.</p>
+        <div class="tags">
+          <span class="tag">reverses</span>
+          <span class="tag">hand evaluation</span>
+          <span class="tag">limited hands</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">04</div>
+        <h3>Responder's Rebid</h3>
+        <p>With opener's shape and strength now in view, responder zooms in on the final contract level and strain. Introduces New Minor Forcing and 4th-Suit Forcing — indispensable system tools.</p>
+        <div class="tags">
+          <span class="tag">NMF</span>
+          <span class="tag">4th-suit forcing</span>
+          <span class="tag">game decisions</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">05</div>
+        <h3>Overcalls &amp; Advances</h3>
+        <p>Bridge is a competitive sport — you don't have to give opponents a free run. Learn when and how to overcall, the role of the takeout double, and how to stay disciplined about suit quality and vulnerability.</p>
+        <div class="tags">
+          <span class="tag">takeout double</span>
+          <span class="tag">aggression</span>
+          <span class="tag">penalties</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">06</div>
+        <h3>Responding After RHO Overcalled</h3>
+        <p>Does the overcall change what your bids mean? Systematically covered by categorizing RHO's action: NT overcall, suit overcall, double, or preempt — a complete map for each scenario.</p>
+        <div class="tags">
+          <span class="tag">negative double</span>
+          <span class="tag">cuebids</span>
+          <span class="tag">suit vs NT</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">07</div>
+        <h3>Advanced Topics</h3>
+        <p>Modern competitive bidding: the many faces of double, artificial 2NT, two-suited overcalls, balancing, and passed-hand bidding. Emphasis on current expert practice and firm partnership agreements.</p>
+        <div class="tags">
+          <span class="tag">Michaels</span>
+          <span class="tag">unusual 2NT</span>
+          <span class="tag">balancing</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">08</div>
+        <h3>Slam Bidding</h3>
+        <p>4NT is the most abused convention in bridge. Learn when to use it — and when not to. Control bids, non-serious 3NT, and the Last Train convention give your slam bidding the precision it deserves.</p>
+        <div class="tags">
+          <span class="tag">control bids</span>
+          <span class="tag">RKCB</span>
+          <span class="tag">Last Train</span>
+          <span class="tag">non-serious 3NT</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="suit-divider" aria-hidden="true">
+    <span class="h">♥</span>
+    <span class="s">♠</span>
+    <span class="d">♦</span>
+    <span class="c">♣</span>
+  </div>
+
+  <!-- CARD PLAY -->
+  <section class="part" id="cardplay">
+    <div class="part-label">Part II</div>
+    <h2 class="part-title">Card Play Technique</h2>
+
+    <div class="modules">
+
+      <div class="module">
+        <div class="module-num">09</div>
+        <h3>The Fundamentals</h3>
+        <p>Power of honors, trick promotion, types of finesses, and entry management — the building blocks every declarer must have.</p>
+        <div class="tags">
+          <span class="tag">finesses</span>
+          <span class="tag">entries</span>
+          <span class="tag">honors</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">10</div>
+        <h3>Suit Combination</h3>
+        <p>Suit distributions, the principle of restricted choice, entry management, and safety plays to protect your contract.</p>
+        <div class="tags">
+          <span class="tag">restricted choice</span>
+          <span class="tag">safety play</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">11</div>
+        <h3>Playing Notrump Contracts</h3>
+        <p>Count winners, build a plan to develop more, and deploy hold-up and avoidance plays. Blocking and unblocking to free entries when you need them most.</p>
+        <div class="tags">
+          <span class="tag">hold-up</span>
+          <span class="tag">avoidance</span>
+          <span class="tag">blocking</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">12</div>
+        <h3>Declaring Suit Contracts</h3>
+        <p>Count losers and systematically eliminate them — ruffing, discarding, or finessing. When to draw trumps and when to delay, plus cross-ruffing and the elegant dummy reversal.</p>
+        <div class="tags">
+          <span class="tag">loser count</span>
+          <span class="tag">cross-ruff</span>
+          <span class="tag">dummy reversal</span>
+        </div>
+      </div>
+
+      <div class="module wide">
+        <div class="module-num">13</div>
+        <h3>End Plays</h3>
+        <p>The most common advanced play technique — found in every serious text on declarer play. More accessible than most think: a two-stage process of elimination followed by throw-in. Covered through extensive worked examples.</p>
+        <div class="tags">
+          <span class="tag">elimination</span>
+          <span class="tag">throw-in</span>
+          <span class="tag">advanced</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">14</div>
+        <h3>Other Advanced Techniques</h3>
+        <p>Bath coup, trump coup, scissors coup, Morton's fork, and deceptive play to keep the defense guessing.</p>
+        <div class="tags">
+          <span class="tag">coups</span>
+          <span class="tag">deception</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">15</div>
+        <h3>Introduction to Squeezes</h3>
+        <p>Simple squeeze, double squeeze, strip squeeze. Rectifying the count and the Vienna coup to set them up.</p>
+        <div class="tags">
+          <span class="tag">squeeze</span>
+          <span class="tag">Vienna coup</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="suit-divider" aria-hidden="true">
+    <span class="h">♥</span>
+    <span class="s">♠</span>
+    <span class="d">♦</span>
+    <span class="c">♣</span>
+  </div>
+
+  <!-- DEFENSE -->
+  <section class="part" id="defense">
+    <div class="part-label">Part III</div>
+    <h2 class="part-title">Defense Play</h2>
+
+    <div class="modules">
+
+      <div class="module">
+        <div class="module-num">16</div>
+        <h3>The Fundamentals</h3>
+        <p>Leads and signals, the rule of 11, second and third hand plays, and the BOSTON framework for opening leader discipline.</p>
+        <div class="tags">
+          <span class="tag">opening lead</span>
+          <span class="tag">signals</span>
+          <span class="tag">rule of 11</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">17</div>
+        <h3>Defending Notrump</h3>
+        <p>Defense against NT is often a race. Return partner's suit, read card combinations, deploy hold-up play, and count — obsessively — to reconstruct declarer's hand.</p>
+        <div class="tags">
+          <span class="tag">card reading</span>
+          <span class="tag">hold-up</span>
+          <span class="tag">counting</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">18</div>
+        <h3>Defense at Suit Contracts</h3>
+        <p>Draw inferences from the bidding, identify the dummy's role, and form a plan: aggressive, passive, ruff-cutting, or stopping suit establishment. Count through every trick.</p>
+        <div class="tags">
+          <span class="tag">active defense</span>
+          <span class="tag">passive defense</span>
+          <span class="tag">ruff control</span>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-num">19</div>
+        <h3>Defensive Techniques</h3>
+        <p>Trump promotion, uppercut, unblocking and overtaking plays, hold-ups, and the specialist coups: Descapells, Merrimac, and Crocodile.</p>
+        <div class="tags">
+          <span class="tag">trump promotion</span>
+          <span class="tag">uppercut</span>
+          <span class="tag">coups</span>
+        </div>
+      </div>
+
+      <div class="module wide">
+        <div class="module-num">20</div>
+        <h3>Partnership Defense</h3>
+        <p>Interpreting signals, negative inference, discarding, returning and shifting suits, and protecting your partner. The focus is partnership: not just what your signals say, but how to think in your partner's shoes at the table.</p>
+        <div class="tags">
+          <span class="tag">signals</span>
+          <span class="tag">inference</span>
+          <span class="tag">partnership</span>
+          <span class="tag">discards</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Bridge Illustrated &nbsp;·&nbsp; Instructor: Steve Chen &nbsp;·&nbsp; <a href="mailto:stevechen.bridge@gmail.com">stevechen.bridge@gmail.com</a></p>
+</footer>
+
+</body>
+</html>
