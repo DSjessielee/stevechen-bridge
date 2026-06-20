@@ -307,11 +307,27 @@
     text-decoration: none;
   }
 
-  /* Hide email and phone information */
+  /* Click-to-reveal contact information */
   a[href*="mailto:"],
   a[href*="tel:"] {
     display: none;
   }
+  a[href*="mailto:"].revealed,
+  a[href*="tel:"].revealed {
+    display: inline;
+  }
+  .reveal-link {
+    color: var(--gold-lt);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    border: none;
+    background: none;
+    font: inherit;
+    padding: 0;
+  }
+  .reveal-link:hover { color: #fff; }
+  .reveal-link.hidden { display: none; }
 
   @media (max-width: 600px) {
     .header-inner { grid-template-columns: 1fr; }
@@ -331,7 +347,7 @@
       <h1>Bridge <em>Illustrated</em></h1>
       <p class="header-sub">
         Instructor: Steve Chen &nbsp;·&nbsp;
-        <a href="mailto:stevechen.bridge@gmail.com">stevechen.bridge@gmail.com</a>
+        <button class="reveal-link" onclick="this.classList.add('hidden'); this.nextElementSibling.classList.add('revealed');">Show email</button><a href="mailto:stevechen.bridge@gmail.com">stevechen.bridge@gmail.com</a>
       </p>
     </div>
     <div class="card-motif" aria-hidden="true">
@@ -617,7 +633,7 @@
 </main>
 
 <footer>
-  <p>Bridge Illustrated &nbsp;·&nbsp; Instructor: Steve Chen &nbsp;·&nbsp; <a href="mailto:stevechen.bridge@gmail.com">stevechen.bridge@gmail.com</a></p>
+  <p>Bridge Illustrated &nbsp;·&nbsp; Instructor: Steve Chen &nbsp;·&nbsp; <button class="reveal-link" onclick="this.classList.add('hidden'); this.nextElementSibling.classList.add('revealed');">Show email</button><a href="mailto:stevechen.bridge@gmail.com">stevechen.bridge@gmail.com</a></p>
 </footer>
 
 </body>

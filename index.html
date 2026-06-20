@@ -407,7 +407,7 @@
     }
 
     .contact-link {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 10px;
       color: var(--navy);
@@ -420,7 +420,6 @@
     }
     .contact-link:last-child { border-bottom: none; }
     .contact-link:hover { color: var(--gold); }
-    .contact-link { display: none; }
     .contact-icon { font-size: 16px; width: 20px; text-align: center; }
 
     .cta-btn-main {
@@ -447,9 +446,42 @@
     }
     footer strong { color: rgba(255,255,255,0.6); }
 
-    /* Hide contact information */
-    .hidden-contact,
+    /* Click-to-reveal contact information */
     .contact-link { display: none; }
+    .contact-link.revealed { display: flex; }
+    .hidden-contact { display: none; }
+    .hidden-contact.revealed { display: inline; }
+
+    .reveal-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: background 0.2s;
+    }
+    .reveal-btn:hover { background: #1e3a6e; }
+    .reveal-btn.hidden { display: none; }
+
+    .footer-reveal-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      font-size: 13px;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .footer-reveal-btn:hover { color: rgba(255,255,255,0.8); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 860px) {
@@ -648,6 +680,7 @@
     <div class="cta-box">
       <div class="cta-box-title">Get in Touch</div>
       <div class="cta-box-sub">Steve Chen · Bridge Coach</div>
+      <button class="reveal-btn" onclick="revealContact(this)">🔒 Click to Show Contact Info</button>
       <a href="mailto:stevechen.bridge@gmail.com" class="contact-link">
         <span class="contact-icon">✉</span>
         stevechen.bridge@gmail.com
@@ -662,8 +695,20 @@
 
   <!-- FOOTER -->
   <footer>
-    <strong>Steve Chen Bridge Coaching</strong> &nbsp;·&nbsp; Classes start August 2026 &nbsp;·&nbsp; <span class="hidden-contact">stevechen.bridge@gmail.com</span>
+    <strong>Steve Chen Bridge Coaching</strong> &nbsp;·&nbsp; Classes start August 2026 &nbsp;·&nbsp; <button class="footer-reveal-btn" onclick="revealFooterContact(this)">Show email</button><span class="hidden-contact">stevechen.bridge@gmail.com</span>
   </footer>
 
+<script>
+function revealContact(btn) {
+  btn.classList.add('hidden');
+  btn.parentElement.querySelectorAll('.contact-link').forEach(function(el) {
+    el.classList.add('revealed');
+  });
+}
+function revealFooterContact(btn) {
+  btn.style.display = 'none';
+  btn.nextElementSibling.classList.add('revealed');
+}
+</script>
 </body>
 </html>
