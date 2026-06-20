@@ -307,6 +307,12 @@
     text-decoration: none;
   }
 
+  /* Hide email and phone information */
+  a[href*="mailto:"],
+  a[href*="tel:"] {
+    display: none;
+  }
+
   @media (max-width: 600px) {
     .header-inner { grid-template-columns: 1fr; }
     .card-motif { display: none; }
